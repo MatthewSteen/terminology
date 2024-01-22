@@ -1,0 +1,25 @@
+name: continuous deployment
+
+on:
+  workflow_dispatch
+
+# required to push to gh-pages branch
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # error without:
+        #   ! [rejected]        gh-pages -> gh-pages (fetch first)
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: install dependencies
+        run: pip install mkdocs
+      - name: deploy
+        run: mkdocs gh-deploy
